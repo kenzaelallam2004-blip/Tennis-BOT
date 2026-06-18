@@ -7,17 +7,16 @@ import random
 from gtts import gTTS
 
 # ============================================================
-# CONFIG
+# CONFIG PAGE
 # ============================================================
-st.set_page_config(page_title="🎾 Tennis BOT", layout="wide")
+st.set_page_config(page_title="🎾 Tennis Smart Machine", layout="wide")
 
 # ============================================================
-# CSS + BACKGROUND + ANIMATION BALLS
+# CSS + BACKGROUND + BALLS
 # ============================================================
 st.markdown("""
 <style>
 
-/* ================= BACKGROUND ================= */
 .stApp {
     background: linear-gradient(-45deg, #0b3d2e, #145a32, #1f7a4a, #58d68d);
     background-size: 400% 400%;
@@ -30,50 +29,44 @@ st.markdown("""
     100% { background-position: 0% 50%; }
 }
 
-/* ================= FLOATING BALLS ================= */
+/* 🎾 floating balls */
 .ball {
     position: fixed;
-    width: 10px;
-    height: 10px;
+    width: 14px;
+    height: 14px;
     background: #f1c40f;
     border-radius: 50%;
-    box-shadow: 0 0 10px rgba(255,255,255,0.4);
-    animation: floatBall 8s linear infinite;
+    animation: float 8s linear infinite;
     z-index: 0;
-    opacity: 0.7;
 }
 
-@keyframes floatBall {
-    0% {
-        transform: translateY(100vh) scale(0.5);
-        opacity: 0;
-    }
-    20% {
-        opacity: 1;
-    }
-    100% {
-        transform: translateY(-10vh) scale(1);
-        opacity: 0;
-    }
+@keyframes float {
+    0% { transform: translateY(100vh); opacity: 0; }
+    50% { opacity: 1; }
+    100% { transform: translateY(-10vh); opacity: 0; }
 }
 
-.ball:nth-child(1) { left: 10%; animation-delay: 0s; }
-.ball:nth-child(2) { left: 25%; animation-delay: 2s; }
-.ball:nth-child(3) { left: 40%; animation-delay: 4s; }
-.ball:nth-child(4) { left: 60%; animation-delay: 1s; }
-.ball:nth-child(5) { left: 80%; animation-delay: 3s; }
-.ball:nth-child(6) { left: 90%; animation-delay: 5s; }
+.ball:nth-child(1){left:10%;}
+.ball:nth-child(2){left:25%; animation-delay:2s;}
+.ball:nth-child(3){left:40%; animation-delay:4s;}
+.ball:nth-child(4){left:60%; animation-delay:1s;}
+.ball:nth-child(5){left:80%; animation-delay:3s;}
 
-/* ================= UI ================= */
+.glass {
+    background: rgba(255,255,255,0.75);
+    padding: 20px;
+    border-radius: 20px;
+}
+
+/* bouton centré */
 .center-btn {
     display: flex;
     justify-content: center;
+    margin-top: 20px;
 }
 
 </style>
 
-<!-- 🎾 Floating balls -->
-<div class="ball"></div>
 <div class="ball"></div>
 <div class="ball"></div>
 <div class="ball"></div>
@@ -95,7 +88,7 @@ if "history" not in st.session_state:
     st.session_state.history = []
 
 # ============================================================
-# RESET
+# RESET / QUIT
 # ============================================================
 def reset_all():
     st.session_state.step = 0
@@ -109,33 +102,30 @@ def reset_all():
 def coach(speed, spin, precision, level):
 
     base = {
-        "Débutant": "Travaille ton timing.",
-        "Intermédiaire": "Bon rythme, améliore ton placement.",
-        "Avancé": "Excellent contrôle, varie les trajectoires."
+        "Débutant": ["Travaille ton timing.", "Sois plus stable."],
+        "Intermédiaire": ["Bon rythme, ajuste ton placement."],
+        "Avancé": ["Excellent niveau, varie tes trajectoires."]
     }
 
-    msg = base[level]
+    msg = random.choice(base[level])
 
     if precision > 6:
         msg += " Trop d'écart."
     if speed > 120:
-        msg += " Trop de puissance."
+        msg += " Trop puissant."
 
     return msg
 
 # ============================================================
-# VOIX (SAFE CLOUD)
+# VOIX
 # ============================================================
 def speak(text):
-    try:
-        tts = gTTS(text=text, lang="fr")
-        tts.save("coach.mp3")
-        st.audio("coach.mp3")
-    except:
-        st.warning("Audio indisponible")
+    tts = gTTS(text=text, lang="fr")
+    tts.save("coach.mp3")
+    st.audio("coach.mp3")
 
 # ============================================================
-# PAGE 1 - HOME
+# PAGE 1 - ACCUEIL
 # ============================================================
 if st.session_state.step == 0:
 
@@ -146,24 +136,27 @@ if st.session_state.step == 0:
             st.image("machine.jpg", width=350)
 
     with col2:
-        st.title("🎾 Tennis BOT")
+        st.title("🎾 Smart Tennis Machine")
+
         st.write("""
-        Machine intelligente :
-        - vitesse
-        - effet
-        - précision
+        Machine intelligente d'entraînement qui adapte automatiquement :
+        - ⚡ vitesse
+        - 🌀 effet
+        - 🎯 précision
+        
+        Entraîne-toi comme un joueur professionnel.
         """)
 
     st.markdown('<div class="center-btn">', unsafe_allow_html=True)
 
-    if st.button("🚀 Démarrer"):
+    if st.button("🚀 Démarrer l'expérience"):
         st.session_state.step = 1
         st.rerun()
 
     st.markdown('</div>', unsafe_allow_html=True)
 
 # ============================================================
-# PAGE 2 - PROFILE
+# PAGE 2 - FORMULAIRE
 # ============================================================
 elif st.session_state.step == 1:
 
@@ -172,15 +165,17 @@ elif st.session_state.step == 1:
     with st.form("form"):
 
         nom = st.text_input("Nom")
+
+        # âge clavier
         age = st.text_input("Âge")
 
         frequence = st.selectbox(
-            "Fréquence",
-            ["1/semaine", "2/semaine", "3-4/semaine", "Tous les jours"]
+            "Fréquence de jeu",
+            ["1 fois/semaine", "2 fois/semaine", "3-4 fois/semaine", "Tous les jours"]
         )
 
         anciennete = st.selectbox(
-            "Ancienneté",
+            "Ancienneté (années de pratique)",
             ["<1 an", "1 an", "2 ans", "3-5 ans", "5+ ans"]
         )
 
@@ -195,6 +190,8 @@ elif st.session_state.step == 1:
             st.session_state.user = {
                 "Nom": nom,
                 "Âge": age,
+                "Fréquence": frequence,
+                "Ancienneté": anciennete,
                 "Niveau": niveau,
                 "base_speed": base_speed
             }
@@ -203,7 +200,7 @@ elif st.session_state.step == 1:
             st.rerun()
 
 # ============================================================
-# PAGE 3 - TRAINING + 3D
+# PAGE 3 - SIMULATION
 # ============================================================
 elif st.session_state.step == 2:
 
@@ -214,70 +211,68 @@ elif st.session_state.step == 2:
     speed = st.slider("Vitesse", 30, 150, u["base_speed"])
     spin = st.slider("Effet", 0, 15, 5)
 
-    if st.button("Lancer 🎾"):
+    if st.button("Lancer la balle 🎾"):
 
-        x = np.random.normal(0, 3.5)
+        x = np.random.normal(0, 4)
         precision = abs(x) * 2
 
         st.session_state.history.append({
             "Speed": speed,
-            "Spin": spin,
             "Precision": precision,
             "Zone": "OK" if precision < 6 else "MISS"
         })
 
         msg = coach(speed, spin, precision, u["Niveau"])
 
-        st.subheader("🤖 Coach IA")
+        st.markdown("### 🤖 Coach IA")
         st.info(msg)
 
         speak(msg)
 
-        # ====================================================
-        # 🎾 3D SIMULATION
-        # ====================================================
-        t = np.linspace(0, 1, 30)
-
-        x_traj = np.zeros_like(t)
-        y_traj = 10 * t
-        z_traj = 4 * t * (1 - t) * speed / 90
-
         fig = go.Figure()
-
         fig.add_trace(go.Scatter3d(
-            x=x_traj,
-            y=y_traj,
-            z=z_traj,
-            mode="lines+markers",
-            line=dict(color="yellow", width=6),
-            name="Ball"
+            x=[0,0,0],
+            y=[0,10,12],
+            z=[0,0,1],
+            mode="lines"
         ))
 
-        fig.add_trace(go.Scatter3d(
-            x=[0],
-            y=[10],
-            z=[0],
-            mode="markers",
-            marker=dict(size=8, color="red"),
-            name="Impact"
-        ))
+        st.plotly_chart(fig)
 
-        st.plotly_chart(fig, use_container_width=True)
+    st.markdown("---")
 
-    # ============================================================
-    # HISTORIQUE
-    # ============================================================
-    if len(st.session_state.history) > 0:
+    if st.button("📊 Voir l'historique"):
+        st.session_state.step = 3
+        st.rerun()
+
+# ============================================================
+# PAGE 4 - HISTORIQUE
+# ============================================================
+elif st.session_state.step == 3:
+
+    st.title("📊 Historique joueur")
+
+    if st.session_state.history:
 
         df = pd.DataFrame(st.session_state.history)
-
-        st.markdown("## 📊 Historique")
 
         st.dataframe(df)
 
         st.metric("Total tirs", len(df))
-        st.metric("Precision moyenne", round(df["Precision"].mean(), 2))
+        st.metric("Précision moyenne", round(df["Precision"].mean(), 2))
         st.metric("Taux réussite", f"{(df['Zone']=='OK').mean()*100:.1f}%")
 
-    if st.button("🔄 Restart"):
+    else:
+        st.info("Aucun tir enregistré.")
+
+    st.markdown("---")
+
+    if st.button("⬅ Retour au jeu"):
+        st.session_state.step = 2
+        st.rerun()
+
+    if st.button("🔄 Nouveau joueur"):
         reset_all()
+
+    if st.button("🚪 Quitter"):
+        st.stop()
