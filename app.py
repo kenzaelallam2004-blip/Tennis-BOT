@@ -9,7 +9,7 @@ from gtts import gTTS
 # ============================================================
 # CONFIG PAGE
 # ============================================================
-st.set_page_config(page_title="🎾 Tennis Smart Machine", layout="wide")
+st.set_page_config(page_title="🎾 Tennis BOT ", layout="wide")
 
 # ============================================================
 # CSS + BACKGROUND + BALLS
@@ -136,7 +136,7 @@ if st.session_state.step == 0:
             st.image("machine.jpg", width=350)
 
     with col2:
-        st.title("🎾 Smart Tennis Machine")
+        st.title("🎾 Smart BOT ")
 
         st.write("""
         Machine intelligente d'entraînement qui adapte automatiquement :
@@ -144,7 +144,7 @@ if st.session_state.step == 0:
         - 🌀 effet
         - 🎯 précision
         
-        Entraîne-toi comme un joueur professionnel.
+        Entraîne-toi comme un joueur professionnel, commence ton aventure avec nous!
         """)
 
     st.markdown('<div class="center-btn">', unsafe_allow_html=True)
