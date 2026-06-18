@@ -136,7 +136,7 @@ if st.session_state.step == 0:
             st.image("machine.jpg", width=350)
 
     with col2:
-        st.title("🎾 Smart BOT ")
+        st.title("🎾 Smart BOT")
 
         st.write("""
         Machine intelligente d'entraînement qui adapte automatiquement :
@@ -144,7 +144,8 @@ if st.session_state.step == 0:
         - 🌀 effet
         - 🎯 précision
         
-        Entraîne-toi comme un joueur professionnel, commence ton aventure avec nous!
+        Entraîne-toi comme un joueur professionnel.
+        Commence ton propre entrainement avec nous!
         """)
 
     st.markdown('<div class="center-btn">', unsafe_allow_html=True)
@@ -274,5 +275,12 @@ elif st.session_state.step == 3:
     if st.button("🔄 Nouveau joueur"):
         reset_all()
 
-    if st.button("🚪 Quitter"):
-        st.stop()
+    # ============================================================
+# FOOTER
+# ============================================================
+st.markdown("""
+    <div style="text-align:center; margin-top:40px; padding:20px; 
+                color:white; opacity:0.7; font-size:14px;">
+        Créé par Nouhaila Bahi et Zainab Edrif 🎾
+    </div>
+""", unsafe_allow_html=True)    
