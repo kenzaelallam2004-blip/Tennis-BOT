@@ -136,7 +136,7 @@ if st.session_state.step == 0:
             st.image("machine.jpg", width=350)
 
     with col2:
-        st.title("🎾 Smart BOT")
+        st.title("🎾 Tennis BOT")
 
         st.write("""
         Machine intelligente d'entraînement qui adapte automatiquement :
